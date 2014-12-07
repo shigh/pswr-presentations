@@ -1,0 +1,827 @@
+\documentclass{beamer} 
+\usetheme{msu}
+\usepackage{xcolor} 
+\usepackage{tikz}
+\usepackage{subfig}
+\usepackage{pgfplots}
+\usepackage{animate}
+\usepackage{algorithm}
+\usepackage{algpseudocode}
+\pgfplotsset{compat=newest}
+
+% Beamer setup
+\AtBeginSection[]
+{
+  \begin{frame}
+    \frametitle{Table of Contents}
+    \tableofcontents[currentsection]
+  \end{frame}
+}
+%\setbeamertemplate{headline}{}
+
+\setbeamertemplate{headline}
+{%
+  \leavevmode%
+  \begin{beamercolorbox}[wd=.5\paperwidth,ht=2.5ex,dp=1.125ex]{section in head/foot}%
+    \hbox to .5\paperwidth{\hfil\insertsectionhead\hfil}
+  \end{beamercolorbox}%
+  \begin{beamercolorbox}[wd=.5\paperwidth,ht=2.5ex,dp=1.125ex]{subsection in head/foot}%
+    \hbox to .5\paperwidth{\hfil\insertsubsectionhead\hfil}
+  \end{beamercolorbox}%
+}
+
+% Algorithmic parallel commands
+\algblock{ParFor}{EndParFor}
+\algnewcommand\algorithmicparfor{\textbf{parfor}}
+\algnewcommand\algorithmicpardo{\textbf{do}}
+\algnewcommand\algorithmicendparfor{\textbf{end\ parfor}}
+\algrenewtext{ParFor}[1]{\algorithmicparfor\ #1\ \algorithmicpardo}
+\algrenewtext{EndParFor}{\algorithmicendparfor}
+%\usetikzlibrary{decorations.pathreplacing}
+%\usetikzlibrary{plotmarks}
+
+\logo{\includegraphics[height=2cm]{msu_seal_washout}} 
+
+\title[Pipeline Schwarz Waveform Relaxation\hspace{1em}\insertframenumber/
+\inserttotalframenumber]{~ Pipeline Schwarz Waveform Relaxation ~}
+
+\author[Scott High \quad highscot@msu.edu \qquad SIAM Parallel, 2014]{Benjamin Ong \inst{1} \and Scott
+  High \inst{1} \and \\Felix Kwok \inst{2}}
+\institute[shortinst]{\inst{1} Michigan State University, East
+  Lansing, MI \and \inst{2} Universit\'{e} de Gen\`{e}ve, Switzerland }
+
+\date{\today}
+
+\makeatletter
+\newcommand{\cemph}[1]{{\color[rgb]{1,0,0} \emph{#1}}}
+
+\define@key{beamerframe}{t}[true]{% top
+  \beamer@frametopskip=.2cm plus .5\paperheight\relax%
+  \beamer@framebottomskip=0pt plus 1fill\relax%
+  \beamer@frametopskipautobreak=\beamer@frametopskip\relax%
+  \beamer@framebottomskipautobreak=\beamer@framebottomskip\relax%
+  \def\beamer@initfirstlineunskip{}%
+}
+
+\begin{document}
+
+\begin{frame}
+  \maketitle
+  \begin{center}
+  Work supported by the AFOSR 9550-12-1-0455 \& \\Institute for Cyber-Enabled Research (MSU)
+  \end{center}
+\end{frame}
+
+\section{Schwartz Waveform Relaxation}
+
+% \begin{frame}
+%   \frametitle{PDE of interest}
+%   \begin{align*}
+%     u_t =  \mathcal{L}(t,u), \quad (x,t)\in \Omega\times[0,T]\\
+%     u(x,0) = f(x), \quad x \in \Omega \\
+%     u(z,t) = g(z,t), \quad z \in \partial\Omega.
+%   \end{align*}
+% \end{frame}
+
+\subsection{Schwartz Iteration}
+\begin{frame}
+  \frametitle{Schwartz Iteration}
+  \vspace*{-0.25in}
+  \begin{itemize}
+  \item Let $\Omega = \cup\Omega_i$, $u_i$: solution on $\Omega_i$
+  \item On each subdomain, solve $\forall k$
+    \begin{align*}
+      (u_i)_t =  \mathcal{L}(t_k,u_i), \quad (x,t)\in \Omega_i\times\{t=t_k\}\\
+      u_i(x,0) = f(x), \quad x \in \Omega_i \\
+      u_i(z,t_k) = g(z,t_k), \quad z \in \partial\Omega_i\cap\partial\Omega, \\
+      {T}_{ij}(u_{i}(z,t_k)) = {T}_{ji}(u_{j}(z,t_k)), \quad z \in \partial\Omega_i\cap\partial\Omega_j.
+    \end{align*}
+    (coupling through transmission conditions $T$)
+  \end{itemize}
+
+\end{frame}
+
+\begin{frame}
+  \frametitle{Schwartz Iteration}
+  \vspace*{-0.25in}
+
+  Simple animation
+
+\end{frame}
+
+
+\subsection{Schwartz Waveform Relaxation}
+\begin{frame}
+  \frametitle{Schwartz Waveform Relaxation}
+  \vspace*{-0.25in}
+  \begin{itemize}
+  \item Let $\Omega = \cup\Omega_i$, $u_i$: solution on $\Omega_i$
+  \item On each subdomain, solve
+    \begin{align*}
+      (u_i)_t =  \mathcal{L}(t,u_i), \quad (x,t)\in \Omega_i\times{\color{red}[0,T]}\\
+      u_i(x,0) = f(x), \quad x \in \Omega_i \\
+      u_i(z,t) = g(z,t), \quad z \in \partial\Omega_i\cap\partial\Omega, \\
+      {T}_{ij}(u_{i}(z,t)) = {T}_{ji}(u_{j}(z,t)), \quad z \in \partial\Omega_i\cap\partial\Omega_j.
+    \end{align*}
+    (coupling through transmission conditions $T$)
+  \end{itemize}
+
+\end{frame}
+
+\begin{frame}
+  \frametitle{Schwartz Waveform Relaxation}
+  \vspace*{-0.25in}
+  \begin{itemize}
+  \item Let $\Omega = \cup\Omega_i$, $u_{\color{black}i}^{\color{red}[k]}\color{black}$: 
+    solution on $\Omega_i$, waveform iteration $\color{red}k\color{black}$
+  \item \color{red} Schwartz Waveform Relaxation\color{black}:
+    \begin{align*}
+      (u_{\color{black}i}^{\color{red}[k]}\color{black})_t =  
+      \mathcal{L}(t,u_{\color{black}i}^{\color{red}[k]}\color{black}), 
+      \quad (x,t)\in \Omega_i\times[0,T]\\
+      u_{\color{black}i}^{\color{red}[k]}\color{black}(x,0) = f(x), \quad x \in \Omega_i \\
+      u_{\color{black}i}^{\color{red}[k]}\color{black}(z,t) = g(z,t), 
+      \quad z \in \partial\Omega_i\cap\partial\Omega, \\
+      {T}_{ij}(u_{\color{black}i}^{\color{red}[k]}\color{black}(z,t)) = 
+      {T}_{ji}(u_{\color{black}j}^{\color{red}[k-1]}\color{black}(z,t)), 
+      \quad z \in \partial\Omega_i\cap\partial\Omega_j.
+    \end{align*}
+  \item $T$: transmission condition appropriate to $\mathcal{L}$.
+  \end{itemize}
+
+\end{frame}
+
+\begin{frame}
+  % SWR Algorithm
+  \frametitle{Schwartz Waveform Relaxation}
+  Discretize (e.g. backwards Euler). After initialization: 
+
+  \begin{algorithmic}
+    \For{$k=1 \ldots K$ }\textit{ (Waveform iteration)}
+      \ParFor{$i=1 \ldots N$} \textit{ (Sub-domain)}
+        \For{$t=\Delta t \ldots T$}
+          \State Solve for $u_i^{[k]}(t,x)$
+        \EndFor
+        \For{$t=\Delta t \ldots T$}
+          \State Exchange transmission data $\mathcal{T}(u_i^{[k]}(t, z))$
+        \EndFor
+        \State Check for convergence
+      \EndParFor
+    \EndFor
+  \end{algorithmic}
+
+\end{frame}
+
+
+\begin{frame}
+  \frametitle{Schwartz Waveform Relaxation (animation)}
+  \only<1>{
+    \begin{figure}
+      \centering
+       \input{tikz/fig_tikz_swr_0}
+    \end{figure}
+  }
+  \only<2>{
+    \begin{figure}
+      \centering
+       \input{tikz/fig_tikz_swr_0b}
+    \end{figure}
+  }
+  \only<3>{
+    \begin{figure}
+      \centering
+       \input{tikz/fig_tikz_swr_1}
+    \end{figure}
+  }
+  \only<4>{
+    \begin{figure}
+      \centering
+       \input{tikz/fig_tikz_swr_1b}
+    \end{figure}
+  }
+  \only<5>{
+    \begin{figure}
+      \centering
+       \input{tikz/fig_tikz_swr_2}
+    \end{figure}
+  }
+  \only<6>{
+    \begin{figure}
+      \centering
+       \input{tikz/fig_tikz_swr_2b}
+    \end{figure}
+  }
+  \only<7>{
+    \begin{figure}
+      \centering
+       \input{tikz/fig_tikz_swr_3}
+    \end{figure}
+  }
+  \only<8>{
+    \begin{figure}
+      \centering
+       \input{tikz/fig_tikz_swr_3b}
+    \end{figure}
+  }
+  \only<9>{
+    \begin{figure}
+      \centering
+       \input{tikz/fig_tikz_swr_4}
+    \end{figure}
+  }
+  \only<10>{
+    \begin{figure}
+      \centering
+       \input{tikz/fig_tikz_swr_4b}
+    \end{figure}
+  }
+  \only<11>{
+    \begin{figure}
+      \centering
+       \input{tikz/fig_tikz_swr_5}
+    \end{figure}
+  }
+  \only<12>{
+    \begin{figure}
+      \centering
+       \input{tikz/fig_tikz_swr_6}
+    \end{figure}
+  }
+  \only<13>{
+    \begin{figure}
+      \centering
+       \input{tikz/fig_tikz_swr_7}
+    \end{figure}
+  }
+  \only<14>{
+    \begin{figure}
+      \centering
+       \input{tikz/fig_tikz_swr_8}
+    \end{figure}
+  }
+  \only<15>{
+    \begin{figure}
+      \centering
+       \input{tikz/fig_tikz_swr_9}
+    \end{figure}
+  }
+  \only<16>{
+    \begin{figure}
+      \centering
+       \input{tikz/fig_tikz_swr_10}
+    \end{figure}
+  }
+  \only<17>{
+    \begin{figure}
+      \centering
+       \input{tikz/fig_tikz_swr_11}
+    \end{figure}
+  }
+  \only<18>{
+    \begin{figure}
+      \centering
+       \input{tikz/fig_tikz_swr_12}
+    \end{figure}
+  }
+  \only<19>{
+    \begin{figure}
+      \centering
+       \input{tikz/fig_tikz_swr_13}
+    \end{figure}
+  }
+  \only<20>{
+    \begin{figure}
+      \centering
+       \input{tikz/fig_tikz_swr_14}
+    \end{figure}
+  }
+  \only<21>{
+    \begin{figure}
+      \centering
+       \input{tikz/fig_tikz_swr_15}
+    \end{figure}
+  }
+\end{frame}
+
+\begin{frame}
+  \frametitle{Schwartz Waveform Relaxation}
+  \vspace*{-0.25in}
+
+  Advantages
+  \begin{itemize}
+  \item Naturally handles different time discretizations
+  \item Relatively simple to implement
+    \begin{itemize}
+    \item Natural extension of Schwartz iterations
+    \end{itemize}
+  \item Reduced number of communications
+  \item Multiphysics
+  \item Multiscale methods
+  \end{itemize}
+
+\end{frame}
+
+\begin{frame}
+  \frametitle{Schwartz Waveform Relaxation}
+  \vspace*{-0.25in}
+
+  Practical problems using SWR
+  \begin{itemize}
+  \item Ocean-atmo coupling
+  \item Some other examples...
+  \item Add in references    
+  \end{itemize}
+
+\end{frame}
+
+\begin{frame}
+  \frametitle{Schwartz Waveform Relaxation}
+  \vspace*{-0.25in}
+
+  Multiscale and multi physics
+  \begin{itemize}
+  \item Motivating example
+  \end{itemize}
+
+\end{frame}
+
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Moving into PSWR
+
+\section{Pipeline Schwartz Waveform Relaxation}
+\subsection{Motivation}
+\begin{frame}
+  % Motivate the part of the algorithm that leads to pswr
+  \frametitle{Schwartz Waveform Relaxation}
+  Discretize (e.g. backwards Euler). After initialization: 
+
+  \begin{algorithmic}
+    \For{$k=1 \ldots K$ }\textit{ (Waveform iteration)}
+      \ParFor{$i=1 \ldots N$} \textit{ (Sub-domain)}
+        \For{$n=0 \ldots N_t-1$}
+          \State $u_i^{[k],n+1} - \Delta t\mathcal{L}(t^{n+1},u_i^{[k],n+1}) = u_i^{[k],n}$
+
+          \State $u_i^{[k],n+1}(z) = g(z,t^{n+1}), 
+                z \in \partial\Omega_i\cap\partial\Omega,$
+        \EndFor
+        \For{$n=0 \ldots N_t-1$}
+          \State ${T}_{ij}(u_i^{[k],n+1}(z)) = 
+                {T}_{ji}(u_j^{[k-1],n+1}(z))$
+
+          \State  $z \in \partial\Omega_i\cap\partial\Omega_j.$
+        \EndFor
+        \State Check for convergence
+      \EndParFor
+    \EndFor
+  \end{algorithmic}
+  
+\end{frame}
+
+\begin{frame}
+  % Motivate the part of the algorithm that leads to pswr
+  \frametitle{Schwartz Waveform Relaxation}
+  Discretize (e.g. backwards Euler). After initialization: 
+
+  \begin{algorithmic}
+    \For{$k=1 \ldots K$ }\textit{ (Waveform iteration)}
+      \ParFor{$i=1 \ldots N$} \textit{ (Sub-domain)}
+        \For{$n=0 \ldots N_t-1$}
+          \State $u_i^{[k],n+1} - \Delta t\mathcal{L}(t^{n+1},u_i^{[k],n+1}) = u_i^{[k],n}$
+
+          \State $u_i^{[k],n+1}(z) = g(z,t^{n+1}), 
+                z \in \partial\Omega_i\cap\partial\Omega,$
+        \EndFor
+        \For{$n=0 \ldots N_t-1$}
+          \State ${T}_{ij}(u_i^{[k],n+1}(z)) = 
+                {\color{red}{T}_{ji}(u_j^{[k-1],n+1}(z))}$
+
+          \State  $z \in \partial\Omega_i\cap\partial\Omega_j.$
+        \EndFor
+        \State Check for convergence
+      \EndParFor
+    \EndFor
+  \end{algorithmic}
+  
+\end{frame}
+
+\begin{frame}
+  % Motivate the part of the algorithm that leads to pswr
+  \frametitle{Schwartz Waveform Relaxation}
+  Discretize (e.g. backwards Euler). After initialization: 
+
+  \begin{algorithmic}
+    \For{$k=1 \ldots K$ }\textit{ (Waveform iteration)}
+      \ParFor{$i=1 \ldots N$} \textit{ (Sub-domain)}
+        \For{$n=0 \ldots N_t-1$}
+          \State $u_i^{[k],n+1} - \Delta t\mathcal{L}(t^{n+1},u_i^{[k],n+1}) = u_i^{[k],n}$
+
+          \State $u_i^{[k],n+1}(z) = g(z,t^{n+1}), 
+                z \in \partial\Omega_i\cap\partial\Omega,$
+
+          \State ${T}_{ij}(u_i^{[k],n+1}(z)) = 
+                {\color{red}{T}_{ji}(u_j^{[k-1],n+1}(z))}$
+
+          \State  $z \in \partial\Omega_i\cap\partial\Omega_j.$
+        \EndFor
+        \State Check for convergence
+      \EndParFor
+    \EndFor
+  \end{algorithmic}
+  
+\end{frame}
+
+
+\begin{frame}
+  % Motivate the part of the algorithm that leads to pswr
+  \frametitle{Pipeline Schwartz Waveform Relaxation}
+
+    \begin{algorithmic}
+    \For{$k=1 \ldots K$ }\textit{ (Waveform iteration)}
+      \ParFor{$i=1 \ldots N$} \textit{ (Sub-domain)}
+        \State $t^{[k]} \gets \Delta t$
+        \While{$t^{[k]} \leq T$}
+          \If{$t^{[k]} < t^{[k-1]}$}
+            \State $u_i^{[k],n+1} - \Delta t\mathcal{L}(t^{n+1},u_i^{[k],n+1}) = u_i^{[k],n}$
+
+            \State $u_i^{[k],n+1}(z) = g(z,t^{n+1}), 
+                z \in \partial\Omega_i\cap\partial\Omega,$
+
+            \State ${T}_{ij}(u_i^{[k],n+1}(z)) = 
+                {\color{red}{T}_{ji}(u_j^{[k-1],n+1}(z))}$
+
+            \State  $z \in \partial\Omega_i\cap\partial\Omega_j.$
+            \State  $t^{[k]} \gets t^{[k]}+\Delta t$
+          \EndIf
+        \EndWhile
+      \State Check for convergence          
+      \EndParFor
+    \EndFor
+  \end{algorithmic}
+
+\end{frame}
+
+
+\begin{frame}
+  % Intuitive figure
+  \frametitle{Pipeline Schwartz Waveform Relaxation}
+  \centering
+  \includegraphics[height=0.7\textheight]{figures/pswr}
+\end{frame}
+
+
+\begin{frame}
+  % Motivate the part of the algorithm that leads to pswr
+  \frametitle{Pipeline Schwartz Waveform Relaxation}
+
+    \begin{algorithmic}
+    \ParFor{$k=1 \ldots K$ }\textit{ (Waveform iteration)}
+      \ParFor{$i=1 \ldots N$} \textit{ (Sub-domain)}
+        \State $t^{[k]} \gets \Delta t$
+        \While{$t^{[k]} \leq T$}
+          \If{$t^{[k]} < t^{[k-1]}$}
+            \State $u_i^{[k],n+1} - \Delta t\mathcal{L}(t^{n+1},u_i^{[k],n+1}) = u_i^{[k],n}$
+
+            \State $u_i^{[k],n+1}(z) = g(z,t^{n+1}), 
+                z \in \partial\Omega_i\cap\partial\Omega,$
+
+            \State ${T}_{ij}(u_i^{[k],n+1}(z)) = 
+                {T}_{ji}(u_j^{[k-1],n+1}(z))$
+
+            \State  $z \in \partial\Omega_i\cap\partial\Omega_j.$
+            \State  $t^{[k]} \gets t^{[k]}+\Delta t$
+          \EndIf
+        \EndWhile
+      \State Check for convergence          
+      \EndParFor
+    \EndParFor
+  \end{algorithmic}
+
+\end{frame}
+
+
+\begin{frame}
+  % PSWR algorithm
+  \frametitle{Pipeline Schwartz Waveform Relaxation}
+
+    \begin{algorithmic}
+    \For{$k=1 \ldots K$ }\textit{ (Waveform iteration)}
+      \ParFor{$i=1 \ldots N$} \textit{ (Sub-domain)}
+        \State $t^{[k]} \gets \Delta t$
+        \While{$t^{[k]} \leq T$}
+          \If{$t^{[k]} < t^{[k-1]}$}
+            \State Solve for $u_i^{[k]}(t^{[k]},x)$
+            \State Exchange transmission data $\mathcal{T}(u_i^{[k]}(t^{[k]}, z))$
+            \State $t^{[k]} \gets t^{[k]} + \Delta t$
+          \EndIf
+        \EndWhile
+      \State Check for convergence          
+      \EndParFor
+    \EndFor
+  \end{algorithmic}
+
+\end{frame}
+
+
+\begin{frame}
+  \frametitle{Pipeline Schwartz Waveform Relaxation (animation)}
+  \only<1>{
+  \begin{figure}
+    \centering
+    \input{tikz/fig_tikz_pswr_0}
+  \end{figure}
+  }
+  \only<2>{
+  \begin{figure}
+    \centering
+    \input{tikz/fig_tikz_pswr_1}
+  \end{figure}
+  }
+  \only<3>{
+  \begin{figure}
+    \centering
+    \input{tikz/fig_tikz_pswr_2}
+  \end{figure}
+  }
+  \only<4>{
+  \begin{figure}
+    \centering
+    \input{tikz/fig_tikz_pswr_3}
+  \end{figure}
+  }
+  \only<5>{
+  \begin{figure}
+    \centering
+    \input{tikz/fig_tikz_pswr_4}
+  \end{figure}
+  }
+  \only<6>{
+  \begin{figure}
+    \centering
+    \input{tikz/fig_tikz_pswr_5}
+  \end{figure}
+  }
+  \only<7>{
+  \begin{figure}
+    \centering
+    \input{tikz/fig_tikz_pswr_6}
+  \end{figure}
+  }    
+  \only<8>{
+  \begin{figure}
+    \centering
+    \input{tikz/fig_tikz_pswr_7}
+  \end{figure}
+  }    
+  \only<9>{
+  \begin{figure}
+    \centering
+    \input{tikz/fig_tikz_pswr_8}
+  \end{figure}
+  }    
+  \only<10>{
+  \begin{figure}
+    \centering
+    \input{tikz/fig_tikz_pswr_9}
+  \end{figure}
+  }   
+  \only<11>{
+  \begin{figure}
+    \centering
+    \input{tikz/fig_tikz_pswr_10}
+  \end{figure}
+  }    
+  \only<12>{
+  \begin{figure}
+    \centering
+    \input{tikz/fig_tikz_pswr_11}
+  \end{figure}
+  }    
+  \only<13>{
+  \begin{figure}
+    \centering
+    \input{tikz/fig_tikz_pswr_12}
+  \end{figure}
+  }   
+  \only<14>{
+  \begin{figure}
+    \centering
+    \input{tikz/fig_tikz_pswr_13}
+  \end{figure}
+  }  
+  \only<15>{
+  \begin{figure}
+    \centering
+    \input{tikz/fig_tikz_pswr_14}
+  \end{figure}
+  }  
+\end{frame}
+
+\subsection{Analysis}
+
+\begin{frame}
+  \frametitle{Comparison with Schwartz Waveform}
+  \framesubtitle{Communications}
+
+  \begin{tabular}{c c c}
+     & \# Comm & Comm Size \\
+     SWR & $\mathcal{O}(K-1)$       & $\mathcal{O}(N_t)$ \\
+     PSWR & $\mathcal{O}((K-1) N_t)$  & $\mathcal{O}(1)$  
+  \end{tabular}
+
+  \begin{itemize}
+  \item Increased number of communication
+  \item Decreased size
+  \item On the order of Schwartz iterations
+  \end{itemize}
+
+\end{frame}
+
+
+\begin{frame}
+  \frametitle{Comparison with Schwartz Waveform}
+  \framesubtitle{Parallel Efficiency}
+
+  Maximum parallel efficiency
+  \begin{columns}
+    
+    \begin{column}{.4\textwidth}
+
+      \begin{itemize}
+      \item $K=L$
+        \[ \frac{N_t}{(K-1) + N_t} \]
+
+      \item $K \geq L$ where K is a multiple of L
+        \[ \frac{K N_t}{L\left((L-1)+\frac{K}{L} N_t\right)} \]
+      \end{itemize}
+    \end{column}
+
+    \begin{column}{.8\textwidth}
+      
+      \begin{figure}[]
+        \centering
+        \includegraphics[width=.8\textwidth]{max_eff}
+      \end{figure}
+
+    \end{column}
+
+  \end{columns}
+
+\end{frame}
+
+\subsection{Numerical Results}
+
+\begin{frame}
+  \frametitle{Implementation}
+
+  \begin{itemize}
+  \item Hybrid MPI-OpenMP
+    \begin{itemize}
+    \item Multiple iterations per node/process space
+    \item Slightly lower communication cost than pure MPI
+    \end{itemize}
+  \item Pure MPI
+    \begin{itemize}
+    \item One iteration per node/process space
+    \item More flexible than Hybrid approach
+    \end{itemize}
+  %\item EC2
+  \end{itemize}
+
+\end{frame}
+
+\begin{frame}
+  \frametitle{Pipeline Schwartz WR: Numerical Example}
+
+  Linear heat equation in $\mathbb{R}^1$
+  \begin{itemize}
+  \item $15$ overlapping domains
+  \item Dirichlet transmission conditions
+  \item Backward Euler
+  \end{itemize}
+
+  \vspace*{0.1in}
+  Hardware:
+  \begin{itemize}
+  \item Nodes: 2-socket, 4-core Westmere, QDR IB
+  \item each node handles one sub domain 
+    \begin{itemize}
+      \item communicates with other nodes via MPI (for DD)
+      \item communicates via OpenMP threads within node (for PWR)
+    \end{itemize}
+  \item scaling study: vary number of OpenMP threads on each socket 
+  \end{itemize}
+\end{frame}
+
+
+\begin{frame}
+  \frametitle{Pipeline Schwarz WR: Numerical Example}
+  Good efficiency observed!
+  \begin{center}
+  \begin{tabular}{c|c|c|c|c}
+    $N_x\times N_k$ &
+    \# cores & walltime & speedup & efficiency\\
+    \hline
+    $15 \times 1 $&
+    15 &
+    980 seconds& 
+    1.0$\times$ & 
+    1.00 
+    \\
+    $15 \times 2 $&
+    30 &
+    501 seconds &
+    $1.96\times$ &
+    1.00
+    \\
+    $15 \times 4 $&
+    60 &
+    279 seconds &
+    $3.52\times$ &
+    0.95
+    \\
+    $15 \times 8 $&
+    120 &
+    209 seconds &
+    $4.69\times$ &
+    0.69
+  \end{tabular}
+  \end{center}
+
+\end{frame}
+
+\begin{frame}
+  \frametitle{Pipeline Schwartz WR: Numerical Example}
+
+  Linear heat equation in $\mathbb{R}^2$
+  \begin{itemize}
+  \item $16x16$ non-overlapping domains
+  \item Optimized robin transmission conditions
+  \item Backward Euler
+  \item Communication dominated problem
+  \end{itemize}
+
+  \vspace*{0.1in}
+  Hardware:
+  \begin{itemize}
+  \item TODO -- Stampede info
+  % \item Nodes: 2-socket, 4-core Westmere, QDR IB
+  % \item each node handles one sub domain 
+  %   \begin{itemize}
+  %     \item communicates with other nodes via MPI (for DD)
+  %     \item communicates via OpenMP threads within node (for PWR)
+  %   \end{itemize}
+  % \item scaling study: vary number of OpenMP threads on each socket 
+  \end{itemize}
+\end{frame}
+
+
+\begin{frame}
+  \frametitle{Pipeline Schwartz WR: Numerical Example}
+  Good efficiency observed!
+  \begin{center}
+    \begin{tabular}{c|c|c|c|c}
+      $N_x \times N_y \times N_k$ &
+      \# cores & walltime & speedup & efficiency\\
+      \hline
+      $16 \times 16 \times 1 $&
+      256  & 297.07 seconds & 1.00 $\times$  & 1.00 \\
+      $16 \times 16 \times 2 $&
+      512  & 152.46 seconds & 1.95 $\times$ & 0.97 \\
+      $16 \times 16 \times 4 $&
+      1024 & 76.36 seconds &  3.89 $\times$ & 0.97 \\
+      $16 \times 16 \times 8 $&
+      2048 & 39.27 seconds  & 7.56 $\times$ & 0.95 \\
+      $16 \times 16 \times 16 $&
+      4096 & 21.86 seconds  & 13.59 $\times$ & 0.85 \\
+    \end{tabular}
+  \end{center}
+
+\end{frame}
+
+
+\subsection{Future Work}
+
+\begin{frame}{Future Work}
+
+  \begin{itemize}
+  \item Adaptive in time
+  \item Multiphysics
+  \item Multiscale
+  \item Applications
+  \end{itemize}
+
+\end{frame}
+
+\begin{frame}
+  \frametitle{The End}
+  \begin{center}
+    \usebeamerfont*{frametitle} 
+    Thank You!
+
+    Questions / Comments?
+  \end{center}
+\end{frame}
+
+\end{document}
