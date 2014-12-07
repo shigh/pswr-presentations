@@ -1,0 +1,72 @@
+% Originally created 2010 by Sarah Merz <smerz@pacific.edu>
+% Modified July 2010 by Collin Meierbachtol <meierbac@msu.edu>
+%
+% This file may be distributed and/or modified
+%
+% 1. under the LaTeX Project Public License and/or
+% 2. under the GNU Public License.
+%
+%place this file in the same folder with beamerthemeCopenhagen.sty for example
+
+
+%\greenbox{text1}{text2} creates a theorem-like box, Spartan green on top containing text1 and spartan cream on bottom containing text2
+%similarly use \limebox, \tanbox, \graybox
+
+\mode<presentation>
+
+\useoutertheme{shadow}
+\useinnertheme[shadow=true]{rounded}
+
+%\beamertemplatenavigationsymbolsempty  %removes navigation bar
+
+\definecolor{spartangreen}{RGB}{24,69,59} %approved Michigan State colors May 2010
+\definecolor{spartanlightgreen}{RGB}{105,168,105}
+\definecolor{spartangray}{RGB}{148,153,140}
+\definecolor{spartantan}{RGB}{162,144,87}
+\definecolor{spartancream}{RGB}{228,232,222}
+
+\usecolortheme{whale}
+\usecolortheme{orchid}
+\usecolortheme[named=spartangreen]{structure} %replaces the blue of Copenhagen with Spartan green
+
+\setbeamerfont{block title}{size={}}
+
+\newcommand{\greenbox}[2]{
+\setbeamercolor{uppercol}{fg=white,bg=spartangreen}
+\setbeamercolor{lowercol}{fg=black,bg=spartancream}
+
+\begin{beamerboxesrounded}[upper=uppercol,lower=lowercol,shadow=true]{
+#1 }  #2
+\end{beamerboxesrounded} }
+
+
+\newcommand{\lightgreenbox}[2]{
+\setbeamercolor{upperltgrn}{fg=white,bg=spartanlightgreen}
+\setbeamercolor{lowercol}{fg=black,bg=spartancream}
+
+\begin{beamerboxesrounded}[upper=upperltgrn,lower=lowercol,shadow=true]{
+#1 }  #2
+\end{beamerboxesrounded} }
+
+\newcommand{\tanbox}[2]{
+\setbeamercolor{uppertan}{fg=white,bg=spartantan}
+\setbeamercolor{lowercol}{fg=black,bg=spartancream}
+
+\begin{beamerboxesrounded}[upper=uppertan,lower=lowercol,shadow=true]{
+#1 }  #2
+\end{beamerboxesrounded} }
+
+\newcommand{\graybox}[2]{
+\setbeamercolor{uppergray}{fg=white,bg=spartangray}
+\setbeamercolor{lowercol}{fg=black,bg=spartancream}
+
+\begin{beamerboxesrounded}[upper=uppergray,lower=lowercol,shadow=true]{
+#1 }  #2
+\end{beamerboxesrounded} }
+
+\newenvironment{greenitemize}{\setbeamertemplate{itemize item}{$\bullet$}\begin{itemize}}{\end{itemize}}
+\newenvironment{tanitemize}{\setbeamertemplate{itemize item}{\textcolor{spartantan}{$\bullet$}} \begin{itemize}}{\end{itemize}}
+\newenvironment{blackitemize}{\setbeamertemplate{itemize item}{\textcolor{black}{$\bullet$}} \begin{itemize}}{\end{itemize}}
+
+\mode
+<all>
