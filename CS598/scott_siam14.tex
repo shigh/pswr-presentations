@@ -822,6 +822,51 @@
 
 \end{frame}
 
+%begin load balancing section
+\begin{frame}{Load Balancing Comparisons}{DummyLB, GreedyLB, RefineLB}
+  Load Imbalance Setup
+  \begin{itemize}
+  \item Double the number of time steps for left half of chare array
+  \item Load balance every 5 iterations
+  \item Configuration:
+    \begin{itemize}
+    \item 16 100x100 domains (+ 20 element overlap)
+    \item 1 chare per domain (4x4 array)
+    \item 20 timesteps for 8 chares
+    \item 10 timesteps for 8 chares
+    \item 40 iterations
+    \end{itemize}
+  \end{itemize}
+\end{frame}
+
+\begin{frame}{DummyLB}{Load Balancing Comparisons}
+  \begin{figure}{Time Profile}
+    \includegraphics[width=.65\paperwidth,height=.35\paperheight]{figures/LoadBalancing/TimeProfileDummyLB}
+  \end{figure}
+  \begin{figure}{\hspace{15pt}Overview}
+    \includegraphics[width=.65\paperwidth,height=.35\paperheight]{figures/LoadBalancing/OverviewDummyLB}
+  \end{figure}
+\end{frame}
+
+\begin{frame}{GreedyLB}{Load Balancing Comparisons}
+  \begin{figure}{Time Profile}
+    \includegraphics[width=.65\paperwidth,height=.35\paperheight]{figures/LoadBalancing/TimeProfileGreedyLB}
+  \end{figure}
+  \begin{figure}{\hspace{15pt}Overview}
+    \includegraphics[width=.65\paperwidth,height=.35\paperheight]{figures/LoadBalancing/OverviewGreedyLB}
+  \end{figure}
+\end{frame}
+
+\begin{frame}{RefineLB}{Load Balancing Comparisons}
+  \begin{figure}{Time Profile}
+    \includegraphics[width=.65\paperwidth,height=.35\paperheight]{figures/LoadBalancing/TimeProfileRefineLB}
+  \end{figure}
+  \begin{figure}{\hspace{15pt}Overview}
+    \includegraphics[width=.65\paperwidth,height=.35\paperheight]{figures/LoadBalancing/OverviewRefineLB}
+  \end{figure}
+\end{frame}
+
+
 \section{Conclusion}
 
 \begin{frame}{Future Work}
