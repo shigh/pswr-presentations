@@ -588,6 +588,17 @@
 
 \subsection{Implementation}
 
+\begin{frame}{Charm}
+
+  \begin{itemize}
+  \item Each Chare represents one iteration on one domain
+  \item Chares communicate with their neighboors on adjacent domains
+    in the next iteration
+  \item Currently all communication is done with marshaled parameters
+  \end{itemize}
+
+\end{frame}
+
 \begin{frame}{Implementation}
 
   \begin{itemize}
@@ -819,7 +830,9 @@
   
   \begin{itemize}
   \item Solving 2D diffusion equation on $\Omega = [0,2\pi]^2$ using a
-    uniform mesh with $N_x = N_y = 1600$ using BTCS stencil
+    uniform mesh with $N_x = N_y = 1600$, $2.56M$ unknowns
+  \item Subdomain solutions are calculated with a BTCS finite
+    difference stencil using sparse matrix routines in PETSc
   \item 16 subdomains $\Omega_{i,j}$ ($1\leq i,j \leq 4$) with an
     overlap of 20
   \item 10 time steps for $j\geq3$, 20 time steps for $i\leq2$
@@ -858,12 +871,13 @@
 \section{Conclusion}
 
 \begin{frame}{Future Work}
-  Currently have draft implementations of
+
   \begin{itemize}
   \item PSWR
   \item SWR with locally varying time steps
   \item Fully time adaptive SWR
   \end{itemize}
+
 \end{frame}
 
 \begin{frame}{Future Work}
