@@ -8,7 +8,9 @@
 \usepackage{animate}
 \usepackage{algorithm}
 \usepackage{algpseudocode}
+\usepackage{caption}
 \pgfplotsset{compat=newest}
+
 
 \usepackage{pgfpages}
 %\pgfpagesuselayout{4 on 1}[a4paper,border shrink=5mm]
@@ -607,29 +609,38 @@
 \end{frame}
 
 \begin{frame}{Numerical Experiments}{DummyLB}
-  \begin{figure}{Time Profile}
-    \includegraphics[width=.65\paperwidth,height=.35\paperheight]{figures/LoadBalancing/TimeProfileDummyLB}
+  \begin{figure}
+%    \floatbox[{\capbeside\thisfloatsetup{capbesideposition={left,top}}}]{figure}[\FBwidth]
+%    {\caption{Time Profile}\label{fig:test}}
+%    {\includegraphics[width=5cm]{name}}
+    \includegraphics[width=.75\paperwidth,height=.27\paperheight]{figures/LoadBalancing/TimeProfileDummyLB}
+    \caption{Time Profile}
   \end{figure}
-  \begin{figure}{\hspace{15pt}Overview}
-    \includegraphics[width=.65\paperwidth,height=.35\paperheight]{figures/LoadBalancing/OverviewDummyLB}
+  \begin{figure}
+    \includegraphics[width=.75\paperwidth,height=.27\paperheight]{figures/LoadBalancing/OverviewDummyLB}
+    \caption{Core Overview}
   \end{figure}
 \end{frame}
 
 \begin{frame}{Numerical Experiments}{GreedyLB}
-  \begin{figure}{Time Profile}
-    \includegraphics[width=.65\paperwidth,height=.35\paperheight]{figures/LoadBalancing/TimeProfileGreedyLB}
+  \begin{figure}
+    \includegraphics[width=.75\paperwidth,height=.27\paperheight]{figures/LoadBalancing/TimeProfileGreedyLB}
+    \caption{Time Profile}
   \end{figure}
-  \begin{figure}{\hspace{15pt}Overview}
-    \includegraphics[width=.65\paperwidth,height=.35\paperheight]{figures/LoadBalancing/OverviewGreedyLB}
+  \begin{figure}
+    \includegraphics[width=.75\paperwidth,height=.27\paperheight]{figures/LoadBalancing/OverviewGreedyLB}
+    \caption{Core Overview}
   \end{figure}
 \end{frame}
 
 \begin{frame}{Numerical Experiments}{RefineLB}
-  \begin{figure}{Time Profile}
-    \includegraphics[width=.65\paperwidth,height=.35\paperheight]{figures/LoadBalancing/TimeProfileRefineLB}
+  \begin{figure}
+    \includegraphics[width=.75\paperwidth,height=.27\paperheight]{figures/LoadBalancing/TimeProfileRefineLB}
+    \caption{Time Profile}
   \end{figure}
-  \begin{figure}{\hspace{15pt}Overview}
-    \includegraphics[width=.65\paperwidth,height=.35\paperheight]{figures/LoadBalancing/OverviewRefineLB}
+  \begin{figure}
+    \includegraphics[width=.75\paperwidth,height=.27\paperheight]{figures/LoadBalancing/OverviewRefineLB}
+    \caption{Core Overview}
   \end{figure}
 \end{frame}
 
