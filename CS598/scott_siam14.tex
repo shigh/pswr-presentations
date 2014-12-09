@@ -422,24 +422,24 @@
 \end{frame}
 
 
-\begin{frame}{Schwarz Waveform Relaxation}{Algorithm}
-  % SWR Algorithm
+% \begin{frame}{Schwarz Waveform Relaxation}{Algorithm}
+%   % SWR Algorithm
   
-  \begin{algorithmic}
-    \For{$k=1 \ldots K$ }\textit{ (Waveform iteration)}
-      \ParFor{$i=1 \ldots N$} \textit{ (Sub-domain)}
-        \For{$t=\Delta t \ldots T$}
-          \State Solve for $u_i^{[k]}(t,x)$
-        \EndFor
-        \For{$t=\Delta t \ldots T$}
-          \State Exchange transmission data $\mathcal{T}(u_i^{[k]}(t, z))$
-        \EndFor
-      \EndParFor
-      \State Check for convergence
-    \EndFor
-  \end{algorithmic}
+%   \begin{algorithmic}
+%     \For{$k=1 \ldots K$ }\textit{ (Waveform iteration)}
+%       \ParFor{$i=1 \ldots N$} \textit{ (Sub-domain)}
+%         \For{$t=\Delta t \ldots T$}
+%           \State Solve for $u_i^{[k]}(t,x)$
+%         \EndFor
+%         \For{$t=\Delta t \ldots T$}
+%           \State Exchange transmission data $\mathcal{T}(u_i^{[k]}(t, z))$
+%         \EndFor
+%       \EndParFor
+%       \State Check for convergence
+%     \EndFor
+%   \end{algorithmic}
 
-\end{frame}
+% \end{frame}
 
 
 \begin{frame}{Schwarz Waveform Relaxation (SWR)}
@@ -562,28 +562,28 @@
 \end{frame}
 
 
-\subsection{Algorithm}
+% \subsection{Algorithm}
 
-\begin{frame}{Pipeline Schwarz Waveform Relaxation (PSWR)}
-  {Pipeline Schwarz Waveform Relaxation}
+% \begin{frame}{Pipeline Schwarz Waveform Relaxation (PSWR)}
+%   {Pipeline Schwarz Waveform Relaxation}
 
-    \begin{algorithmic}
-    \RedParFor{$k=1 \ldots K$ }\textit{ (Waveform iteration)}
-      \ParFor{$i=1 \ldots N$} \textit{ (Sub-domain)}
-        \State $t^{[k]} \gets \Delta t$
-        \While{$t^{[k]} \leq T$}
-          \RedIf{$t^{[k]} < t^{[k-1]}$}
-            \State Solve for $u_i^{[k]}(t^{[k]},x)$
-            \State Exchange transmission data $\mathcal{T}(u_i^{[k]}(t^{[k]}, z))$
-            \State $t^{[k]} \gets t^{[k]} + \Delta t$
-          \EndRedIf
-        \EndWhile
-      \EndParFor
-      \State Check for convergence          
-    \EndRedParFor
-  \end{algorithmic}
+%     \begin{algorithmic}
+%     \RedParFor{$k=1 \ldots K$ }\textit{ (Waveform iteration)}
+%       \ParFor{$i=1 \ldots N$} \textit{ (Sub-domain)}
+%         \State $t^{[k]} \gets \Delta t$
+%         \While{$t^{[k]} \leq T$}
+%           \RedIf{$t^{[k]} < t^{[k-1]}$}
+%             \State Solve for $u_i^{[k]}(t^{[k]},x)$
+%             \State Exchange transmission data $\mathcal{T}(u_i^{[k]}(t^{[k]}, z))$
+%             \State $t^{[k]} \gets t^{[k]} + \Delta t$
+%           \EndRedIf
+%         \EndWhile
+%       \EndParFor
+%       \State Check for convergence          
+%     \EndRedParFor
+%   \end{algorithmic}
 
-\end{frame}
+% \end{frame}
 
 
 \subsection{Implementation}
