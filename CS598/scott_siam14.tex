@@ -422,26 +422,6 @@
 \end{frame}
 
 
-% \begin{frame}{Schwarz Waveform Relaxation}{Algorithm}
-%   % SWR Algorithm
-  
-%   \begin{algorithmic}
-%     \For{$k=1 \ldots K$ }\textit{ (Waveform iteration)}
-%       \ParFor{$i=1 \ldots N$} \textit{ (Sub-domain)}
-%         \For{$t=\Delta t \ldots T$}
-%           \State Solve for $u_i^{[k]}(t,x)$
-%         \EndFor
-%         \For{$t=\Delta t \ldots T$}
-%           \State Exchange transmission data $\mathcal{T}(u_i^{[k]}(t, z))$
-%         \EndFor
-%       \EndParFor
-%       \State Check for convergence
-%     \EndFor
-%   \end{algorithmic}
-
-% \end{frame}
-
-
 \begin{frame}{Schwarz Waveform Relaxation (SWR)}
 
   Advantages of SWR
@@ -562,31 +542,7 @@
 \end{frame}
 
 
-% \subsection{Algorithm}
-
-% \begin{frame}{Pipeline Schwarz Waveform Relaxation (PSWR)}
-%   {Pipeline Schwarz Waveform Relaxation}
-
-%     \begin{algorithmic}
-%     \RedParFor{$k=1 \ldots K$ }\textit{ (Waveform iteration)}
-%       \ParFor{$i=1 \ldots N$} \textit{ (Sub-domain)}
-%         \State $t^{[k]} \gets \Delta t$
-%         \While{$t^{[k]} \leq T$}
-%           \RedIf{$t^{[k]} < t^{[k-1]}$}
-%             \State Solve for $u_i^{[k]}(t^{[k]},x)$
-%             \State Exchange transmission data $\mathcal{T}(u_i^{[k]}(t^{[k]}, z))$
-%             \State $t^{[k]} \gets t^{[k]} + \Delta t$
-%           \EndRedIf
-%         \EndWhile
-%       \EndParFor
-%       \State Check for convergence          
-%     \EndRedParFor
-%   \end{algorithmic}
-
-% \end{frame}
-
-
-\subsection{Implementation}
+\section{Implementation}
 
 \begin{frame}{Charm}
 
@@ -599,233 +555,23 @@
 
 \end{frame}
 
-\begin{frame}{Implementation}
-
-  \begin{itemize}
-
-  \item Pure MPI
-    \begin{itemize}
-    \item One iteration per node/process
-    \item More flexible than Hybrid approach
-    \end{itemize}
-    
-  \item Hybrid MPI-OpenMP
-    \begin{itemize}
-    \item Multiple iterations per node/process
-    \item Slightly lower communication cost than pure MPI
-    \end{itemize}
-
-  \end{itemize}
+\begin{frame}
+  
+      \begin{figure}
+        \centering
+        \begin{tikzpicture}
+          \draw[<-] (-.5,4) -- (-.5,0) node[pos=.1,left] {t};
+          \draw (0,0) grid (2,4);
+          \draw (1,0) node[below] {$\Omega_1$};
+          \draw[step=.5] (2.499,0) grid (4.5,4);
+          \draw (3.5,0) node[below] {$\Omega_2$};
+        \end{tikzpicture}
+      \end{figure}
 
 \end{frame}
 
-% \begin{frame}{MPI Implementation of PSWR}
+\section{Numerical Experiments}
 
-%   \begin{figure}
-%     \centering
-%     \begin{tikzpicture}[x=.5cm,y=.5cm]
-
-%       \onslide<+->
-%       {
-%         \foreach \level in {0,...,2}
-%         {
-%           \foreach \region in {0,...,2}
-%           {
-%             \draw (\region*3, \level*4) rectangle ++(2, 3);
-%           }
-%         }
-%         \foreach \level in {1,...,3}
-%         {
-%           \draw (-1, 4*3-\level*4+1.5) node {$L_{\level}$};
-%         }
-
-%         \foreach \region in {1,...,3}
-%         {
-%           \draw (\region*3-3+1.1, 0*4) node[below] {$\Omega_{\region}$};
-%         }
-
-%       }
-
-%       \only<+>
-%       {
-%         \draw[dashed,color=red]  (3*3-.5, 0*4-.5) rectangle ++(-9, 6+2);
-%         \draw[dashed,color=blue] (3*3-.5, 1*4-.5) rectangle ++(-9, 6+2);
-%       }        
-
-%       \foreach \iter in {1,...,3}
-%       {
-%         \only<+>
-%         {
-%           \foreach \level in {0,...,2}
-%           {
-%             \foreach \i in {1,...,\iter}
-%             {
-%               \ifthenelse{\i>\level}
-%               {
-%                 \foreach \region in {0,...,2}
-%                 {
-%                   \draw (\region*3, 8-\level*4+.5*\i-.5*\level) -- ++(2, 0);
-%                 }
-%               }{}
-%             }
-%             \ifthenelse{\iter>\level}
-%             {
-%               \foreach \region in {0,...,2}
-%               {
-%                 \draw[->,color=red]
-%                 (\region*3+1, 8-\level*4+.5*\iter-.5*\level-.5) -- ++(0, .5);
-%               }
-%             }
-%             {}
-
-%           }
-%         }
-
-%         \only<+>
-%         {
-%           \foreach \level in {0,...,2}
-%           {
-%             \foreach \i in {1,...,\iter}
-%             {
-%               \ifthenelse{\i>\level}
-%               {
-%                 \foreach \region in {0,...,2}
-%                 {
-%                   \draw (\region*3, 8-\level*4+.5*\i-.5*\level) -- ++(2, 0);
-%                 }
-%               }{}
-%             }
-%             \ifthenelse{\iter>\level}
-%             {
-%               \ifthenelse{\level<2}
-%               {
-%                 \draw[->,color=blue]
-%                 (0*3+2, 8-\level*4+.5*\iter-.5*\level) -- ++(1, -4);
-%                 \draw[->,color=blue]
-%                 (1*3+2, 8-\level*4+.5*\iter-.5*\level) -- ++(1, -4);
-%                 \draw[->,color=blue]
-%                 (2*3, 8-\level*4+.5*\iter-.5*\level) -- ++(-1, -4);
-%                 \draw[->,color=blue]
-%                 (1*3, 8-\level*4+.5*\iter-.5*\level) -- ++(-1, -4);
-
-%               }{}
-%             }
-%             {}
-
-%           }
-%         }
-%       }
-%     \end{tikzpicture}
-%   \end{figure}
-
-% \end{frame}
-
-
-% \subsection{Efficiency}
-
-
-% \begin{frame}
-%   \frametitle{Comparison with Schwarz Waveform}
-%   \framesubtitle{Communications}
-
-%   \begin{tabular}{c c c}
-%      & \# Comm & Comm Size \\
-%      SWR & $\mathcal{O}(K-1)$       & $\mathcal{O}(N_t)$ \\
-%      PSWR & $\mathcal{O}((K-1) N_t)$  & $\mathcal{O}(1)$  
-%   \end{tabular}
-
-%   \begin{itemize}[<+->]
-%   \item Increased number of communications
-%   \item Decreased size of communications
-%   \item On the order of Schwarz iterations
-%   \item Idle processes
-%   \end{itemize}
-
-% \end{frame}
-
-
-% \begin{frame}{Comparison with Schwarz Waveform}{Parallel Efficiency}
-
-%   Maximum parallel efficiency
-%   \begin{columns}
-    
-%     \begin{column}{.4\textwidth}
-
-%       \begin{itemize}
-%       \item $K=L$
-%         \[ \frac{N_t}{(K-1) + N_t} \]
-
-%       \item $K \geq L$ where K is a multiple of L
-%         \[ \frac{N_t}{\frac{L}{K}(L-1)+ N_t} \]
-%       \end{itemize}
-%     \end{column}
-
-%     \begin{column}{.8\textwidth}
-      
-%       \begin{figure}[]
-%         \centering
-%         \includegraphics[width=.8\textwidth]{max_eff}
-%       \end{figure}
-
-%     \end{column}
-
-%   \end{columns}
-
-% \end{frame}
-
-
-
-% \subsection{Numerical Results}
-% \begin{frame}
-%   \frametitle{Pipeline Schwarz WR: Numerical Example}
-
-%   Linear heat equation in $\mathbb{R}^2$
-%   \begin{itemize}
-%   \item $16x16$ non-overlapping domains
-%   \item Optimized robin transmission conditions
-%   \item Backward Euler
-%   \item Communication dominated problem
-%   \item Benchmarked on Stampede
-%   \end{itemize}
-
-%   % \vspace*{0.1in}
-%   % Hardware:
-%   % \begin{itemize}
-%   % \item TODO -- Stampede info
-%   % % \item Nodes: 2-socket, 4-core Westmere, QDR IB
-%   % % \item each node handles one sub domain 
-%   % %   \begin{itemize}
-%   % %     \item communicates with other nodes via MPI (for DD)
-%   % %     \item communicates via OpenMP threads within node (for PWR)
-%   % %   \end{itemize}
-%   % % \item scaling study: vary number of OpenMP threads on each socket 
-%   % \end{itemize}
-% \end{frame}
-
-
-% \begin{frame}{Pipeline Schwarz WR: Numerical Example}
-%   Good efficiency observed!
-%   \begin{center}
-%     \begin{tabular}{c|c|c|c|c}
-%       $N_x \times N_y \times N_L$ &
-%       \# cores & walltime & speedup & efficiency\\
-%       \hline
-%       $16 \times 16 \times 1 $&
-%       256  & 297.07 s & 1.00 $\times$  & 1.00 \\
-%       $16 \times 16 \times 2 $&
-%       512  & 152.46 s & 1.95 $\times$ & 0.98 \\
-%       $16 \times 16 \times 4 $&
-%       1024 & 76.36 s &  3.89 $\times$ & 0.98 \\
-%       $16 \times 16 \times 8 $&
-%       2048 & 39.27 s  & 7.56 $\times$ & 0.96 \\
-%       $16 \times 16 \times 16 $&
-%       4096 & 21.86 s  & 13.59 $\times$ & 0.88 \\
-%     \end{tabular}
-%   \end{center}
-
-% \end{frame}
-
-%begin load balancing section
 \begin{frame}{Numerical Experiments}{DummyLB, GreedyLB, RefineLB}
   
   \begin{itemize}
@@ -874,23 +620,12 @@
 
   \begin{itemize}
   \item PSWR
-  \item SWR with locally varying time steps
-  \item Fully time adaptive SWR
-  \end{itemize}
-
-\end{frame}
-
-\begin{frame}{Future Work}
-
-  \begin{itemize}
-  \item Adaptive in time
+  \item Fully time adaptive SWR and PSWR
   \item Multiphysics
-  \item Multiscale
   \item Applications
   \end{itemize}
 
 \end{frame}
-
 
 \begin{frame}
   \frametitle{The End}
