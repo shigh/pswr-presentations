@@ -61,15 +61,11 @@
 %\usetikzlibrary{decorations.pathreplacing}
 %\usetikzlibrary{plotmarks}
 
-\logo{\includegraphics[height=2cm]{msu_seal_washout}} 
 
 \title[Pipeline Schwarz Waveform Relaxation\hspace{1em}\insertframenumber/
 \inserttotalframenumber]{~ Pipeline Schwarz Waveform Relaxation ~}
 
-\author[Scott High \quad highscot@msu.edu \qquad SIAM Parallel, 2014]{Benjamin Ong \inst{1} \and Scott
-  High \inst{1} \and \\Felix Kwok \inst{2}}
-\institute[shortinst]{\inst{1} Michigan State University, East
-  Lansing, MI \and \inst{2} Universit\'{e} de Gen\`{e}ve, Switzerland }
+\author[Group 5]{Scott High, Pranjal, James}
 
 \date{\today}
 
@@ -88,10 +84,6 @@
 
 \begin{frame}
   \maketitle
-  \begin{center}
-    Work supported by the AFOSR 9550-12-1-0455,\\
-    NSF grant number OCI-1053575 \& \\Institute for Cyber-Enabled Research (MSU)
-  \end{center}
 \end{frame}
 
 \section{Introduction}
@@ -718,109 +710,109 @@
 % \end{frame}
 
 
-\subsection{Efficiency}
+% \subsection{Efficiency}
 
 
-\begin{frame}
-  \frametitle{Comparison with Schwarz Waveform}
-  \framesubtitle{Communications}
+% \begin{frame}
+%   \frametitle{Comparison with Schwarz Waveform}
+%   \framesubtitle{Communications}
 
-  \begin{tabular}{c c c}
-     & \# Comm & Comm Size \\
-     SWR & $\mathcal{O}(K-1)$       & $\mathcal{O}(N_t)$ \\
-     PSWR & $\mathcal{O}((K-1) N_t)$  & $\mathcal{O}(1)$  
-  \end{tabular}
+%   \begin{tabular}{c c c}
+%      & \# Comm & Comm Size \\
+%      SWR & $\mathcal{O}(K-1)$       & $\mathcal{O}(N_t)$ \\
+%      PSWR & $\mathcal{O}((K-1) N_t)$  & $\mathcal{O}(1)$  
+%   \end{tabular}
 
-  \begin{itemize}[<+->]
-  \item Increased number of communications
-  \item Decreased size of communications
-  \item On the order of Schwarz iterations
-  \item Idle processes
-  \end{itemize}
+%   \begin{itemize}[<+->]
+%   \item Increased number of communications
+%   \item Decreased size of communications
+%   \item On the order of Schwarz iterations
+%   \item Idle processes
+%   \end{itemize}
 
-\end{frame}
+% \end{frame}
 
 
-\begin{frame}{Comparison with Schwarz Waveform}{Parallel Efficiency}
+% \begin{frame}{Comparison with Schwarz Waveform}{Parallel Efficiency}
 
-  Maximum parallel efficiency
-  \begin{columns}
+%   Maximum parallel efficiency
+%   \begin{columns}
     
-    \begin{column}{.4\textwidth}
+%     \begin{column}{.4\textwidth}
 
-      \begin{itemize}
-      \item $K=L$
-        \[ \frac{N_t}{(K-1) + N_t} \]
+%       \begin{itemize}
+%       \item $K=L$
+%         \[ \frac{N_t}{(K-1) + N_t} \]
 
-      \item $K \geq L$ where K is a multiple of L
-        \[ \frac{N_t}{\frac{L}{K}(L-1)+ N_t} \]
-      \end{itemize}
-    \end{column}
+%       \item $K \geq L$ where K is a multiple of L
+%         \[ \frac{N_t}{\frac{L}{K}(L-1)+ N_t} \]
+%       \end{itemize}
+%     \end{column}
 
-    \begin{column}{.8\textwidth}
+%     \begin{column}{.8\textwidth}
       
-      \begin{figure}[]
-        \centering
-        \includegraphics[width=.8\textwidth]{max_eff}
-      \end{figure}
+%       \begin{figure}[]
+%         \centering
+%         \includegraphics[width=.8\textwidth]{max_eff}
+%       \end{figure}
 
-    \end{column}
+%     \end{column}
 
-  \end{columns}
+%   \end{columns}
 
-\end{frame}
-
-
-
-\subsection{Numerical Results}
-\begin{frame}
-  \frametitle{Pipeline Schwarz WR: Numerical Example}
-
-  Linear heat equation in $\mathbb{R}^2$
-  \begin{itemize}
-  \item $16x16$ non-overlapping domains
-  \item Optimized robin transmission conditions
-  \item Backward Euler
-  \item Communication dominated problem
-  \item Benchmarked on Stampede
-  \end{itemize}
-
-  % \vspace*{0.1in}
-  % Hardware:
-  % \begin{itemize}
-  % \item TODO -- Stampede info
-  % % \item Nodes: 2-socket, 4-core Westmere, QDR IB
-  % % \item each node handles one sub domain 
-  % %   \begin{itemize}
-  % %     \item communicates with other nodes via MPI (for DD)
-  % %     \item communicates via OpenMP threads within node (for PWR)
-  % %   \end{itemize}
-  % % \item scaling study: vary number of OpenMP threads on each socket 
-  % \end{itemize}
-\end{frame}
+% \end{frame}
 
 
-\begin{frame}{Pipeline Schwarz WR: Numerical Example}
-  Good efficiency observed!
-  \begin{center}
-    \begin{tabular}{c|c|c|c|c}
-      $N_x \times N_y \times N_L$ &
-      \# cores & walltime & speedup & efficiency\\
-      \hline
-      $16 \times 16 \times 1 $&
-      256  & 297.07 s & 1.00 $\times$  & 1.00 \\
-      $16 \times 16 \times 2 $&
-      512  & 152.46 s & 1.95 $\times$ & 0.98 \\
-      $16 \times 16 \times 4 $&
-      1024 & 76.36 s &  3.89 $\times$ & 0.98 \\
-      $16 \times 16 \times 8 $&
-      2048 & 39.27 s  & 7.56 $\times$ & 0.96 \\
-      $16 \times 16 \times 16 $&
-      4096 & 21.86 s  & 13.59 $\times$ & 0.88 \\
-    \end{tabular}
-  \end{center}
 
-\end{frame}
+% \subsection{Numerical Results}
+% \begin{frame}
+%   \frametitle{Pipeline Schwarz WR: Numerical Example}
+
+%   Linear heat equation in $\mathbb{R}^2$
+%   \begin{itemize}
+%   \item $16x16$ non-overlapping domains
+%   \item Optimized robin transmission conditions
+%   \item Backward Euler
+%   \item Communication dominated problem
+%   \item Benchmarked on Stampede
+%   \end{itemize}
+
+%   % \vspace*{0.1in}
+%   % Hardware:
+%   % \begin{itemize}
+%   % \item TODO -- Stampede info
+%   % % \item Nodes: 2-socket, 4-core Westmere, QDR IB
+%   % % \item each node handles one sub domain 
+%   % %   \begin{itemize}
+%   % %     \item communicates with other nodes via MPI (for DD)
+%   % %     \item communicates via OpenMP threads within node (for PWR)
+%   % %   \end{itemize}
+%   % % \item scaling study: vary number of OpenMP threads on each socket 
+%   % \end{itemize}
+% \end{frame}
+
+
+% \begin{frame}{Pipeline Schwarz WR: Numerical Example}
+%   Good efficiency observed!
+%   \begin{center}
+%     \begin{tabular}{c|c|c|c|c}
+%       $N_x \times N_y \times N_L$ &
+%       \# cores & walltime & speedup & efficiency\\
+%       \hline
+%       $16 \times 16 \times 1 $&
+%       256  & 297.07 s & 1.00 $\times$  & 1.00 \\
+%       $16 \times 16 \times 2 $&
+%       512  & 152.46 s & 1.95 $\times$ & 0.98 \\
+%       $16 \times 16 \times 4 $&
+%       1024 & 76.36 s &  3.89 $\times$ & 0.98 \\
+%       $16 \times 16 \times 8 $&
+%       2048 & 39.27 s  & 7.56 $\times$ & 0.96 \\
+%       $16 \times 16 \times 16 $&
+%       4096 & 21.86 s  & 13.59 $\times$ & 0.88 \\
+%     \end{tabular}
+%   \end{center}
+
+% \end{frame}
 
 %begin load balancing section
 \begin{frame}{Load Balancing Comparisons}{DummyLB, GreedyLB, RefineLB}
